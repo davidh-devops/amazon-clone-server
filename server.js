@@ -28,6 +28,7 @@ app.post('/payments/create', async (req, res) => {
       clientSecret: paymentIntent.client_secret,
     });
   } catch (error) {
+    console.error(error.message);
     res.status(500).send(error.message);
   }
 });
