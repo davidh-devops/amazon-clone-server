@@ -19,13 +19,17 @@ app.get('/', (req, res) => {
 app.post('/payments/create', async (req, res) => {
   const total = req.query.total;
   console.log(`payment request recieved for ${total} cents`);
-  const paymentIntent = await stripe.paymentIntents.create({
-    amount: total,
-    currency: 'usd',
-  });
-  res.status(201).send({
-    clientSecret: paymentIntent.client_secret,
-  });
+  try {
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: total,
+      currency: 'usd',
+    });
+    res.status(201).send({
+      clientSecret: paymentIntent.client_secret,
+    });
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
 });
 
 const port = process.env.PORT || 5000;
